@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot Cities Research Project</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --bs-primary: #fd7e14;
+            /* Vibrant Orange */
+            --bs-primary-rgb: 253, 126, 20;
+        }
+
+        /* Ensure Bootstrap buttons use the custom primary color */
+        .btn-primary {
+            background-color: var(--bs-primary);
+            border-color: var(--bs-primary);
+        }
+
+        .btn-primary:hover {
+            background-color: #e87311;
+            /* Slightly darker orange on hover */
+            border-color: #e87311;
+        }
+
+        /* Using Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Section padding */
+        .section-padding {
+            padding: 80px 0;
+        }
+
+        /* Full-page hero section */
+        .hero-section {
+            height: 100vh;
+            background: linear-gradient(rgba(40, 40, 40, 0.5), rgba(var(--bs-primary-rgb), 0.5)), url('https://github.com/hot-cities/website-assets/blob/e1cb96ffeccf1a255e73e4401a0cf34f9b63456e/bg-image.jpg?raw=true?q=80&w=2070&auto=format&fit=crop') no-repeat center center;
+            background-size: cover;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-weight: 700;
+            font-size: 3.5rem;
+        }
+
+        /* Navbar styling */
+        .navbar-brand {
+            font-weight: 700;
+        }
+
+        .navbar-scrolled {
+            background-color: #fff;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.5s ease;
+        }
+
+        .navbar-scrolled .navbar-brand,
+        .navbar-scrolled .navbar-nav .nav-link {
+            color: #333;
+        }
+
+        .navbar-scrolled .navbar-nav .nav-link:hover {
+            color: var(--bs-primary);
+        }
+
+        /* Mobile dropdown menu styling */
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background-color: rgba(33, 37, 41, 0.95);
+                /* Opaque dark background */
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-top: 0.5rem;
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Work package callout box */
+        .callout {
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--bs-primary);
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.25rem;
+        }
+
+        /* Team member card styling */
+        .team-member-card {
+            border: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-member-card .card-img-top {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin: 25px auto 10px;
+            /* Center the image and add some margin */
+        }
+
+        .team-member-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Section title styling */
+        .section-title {
+            font-weight: 700;
+            margin-bottom: 50px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--bs-primary);
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        /* Clickable work package card */
+        .work-package-card {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .work-package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+        }
+
+        /* News item styling */
+        .news-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .news-item:last-child {
+            border-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .news-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        /* News scroll container */
+        .news-scroll-container {
+            max-height: 90vh;
+            overflow-y: auto;
+            padding-right: 15px;
+            /* space for scrollbar */
+        }
+
+        .image-fill-vh-50 {
+            /* Sets the maximum height to 50% of the viewport height */
+            max-height: 50vh;
+
+            /* Ensures the image covers the area without distortion, cropping if necessary */
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#mainNavbar" data-bs-offset="100">
+
+    <!-- Navbar -->
+    <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Hot Cities</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#overview">Overview</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#work-packages">Work Packages</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#news">News</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#team">Team</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero-section">
+        <div class="container">
+            <h1 class="display-4">Hot Cities</h1>
+            <p class="lead">Mapping urban (re)development and its warming effects in Australia's cities.</p>
+            <a href="#overview" class="btn btn-primary btn-lg mt-3">Learn More</a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Overview Section -->
+        <section id="overview" class="section-padding">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="">
+                        <h2 class="section-title text-start ps-0">Overview</h2>
+                        <p><em>
+                                We are using machine learning to map residential property-parcel scale (re)development
+                                across Australian cities and measure its impact on built, impervious, and tree cover.
+                        </p></em>
+                        <p><em>
+                                Using a combination of thermal remote sensing and microclimate models, we're assessing
+                                how (re)development has warmed Australian residential areas and identifying types of
+                                development that increase or reduce heat exposure.
+                            </em></p>
+                        <p><em>
+                                A detailed analysis of existing planning and policy processes will be undertaken to
+                                appraise effectiveness for controlling heat-causing (re)development.
+                            </em></p>
+                        <p>
+                            The Hot Cities project is funded by an ARC Discovery Project and is a collaboration between
+                            The University of Western Australia and RMIT.
+                        </p>
+                        <figure class="d-none d-md-block">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/uwa.jpg?raw=true"
+                                class="img-fluid d-block mx-auto" style="max-height: 60vh;">
+                            <figcaption class="text-center">Machine learning predictions of parcel development types in
+                                Nedlands and Crawley, Perth, Western Australia (basemap imagery from Nearmap).
+                            </figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="overview" class="section-padding bg-light">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="">
+                        <h2 class="section-title text-start ps-0">Background</h2>
+                        <p>
+                            Australian cities are facing many challenges including housing growing populations while
+                            mitigating the harms of urban heat exposure.
+                            Due to economic and demographic drivers, cities are dynamic and under continual
+                            (re)development which manifests in expansion, densification, and upgrading of existing
+                            housing stocks.
+                            This (re)development changes built and natural environments and the thermal properties of
+                            residential areas in ways that can increase exposure to harmful heat.
+                        </p>
+                        <p>
+                            Extreme heat kills more Australians than any other natural hazard, it affects mental and
+                            physical health, and limits economic productivity.
+                            The Sustainable Development Goals, the Australian Smart Cities Plan, and local government
+                            initiatives recognise the threat of extreme heat in urban environments.
+                            Urban (re)development occurs in piecemeal fashion, with varying degrees of planning
+                            oversight, and without consistent monitoring.
+                            Without detailed and consistent maps of where and how parcels are (re)developing, the
+                            magnitude of warming caused by (re)development remains unclear.
+                        </p>
+                        <p>
+                            Using city-scale high-resolution land cover and built form datasets and geospatial machine
+                            learning and temperature modelling this project will address these data and knowledge gaps.
+                            It will generate a fine-scale picture of how cities being developed, quantify the impacts of
+                            this development on built and nature environments and heat exposure, assess the
+                            effectiveness of existing planning controls, and generate new insights to guide planning and
+                            management of urban areas that are climate resilient.
+                            A detailed description of the project's work is provided below.
+                        </p>
+                        <figure class="d-none d-md-block">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/tree-cover-subdivides.jpg?raw=true"
+                                class="img-fluid d-block mx-auto" style="max-height: 60vh;">
+                            <figcaption class="text-center">Mapping the spatial variability in tree cover on all parcels
+                                classified as having multiple dwellings on them, which are typically redeveloped single
+                                unit lots into multiple units (basemap imagery from Nearmap and tree cover from Nearmap
+                                AI's vector product).</figcaption>
+                        </figure>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work Packages Section -->
+        <section id="work-packages" class="section-padding">
+            <div class="container">
+                <h2 class="text-center section-title">Work Packages</h2>
+                <div class="row g-4">
+                    <!-- Package 1 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm work-package-card" data-bs-toggle="modal"
+                            data-bs-target="#wp1Modal">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">WP1: Mapping (re)development</h5>
+                                <p class="card-text">Developing geospatial machine learning models to classify the
+                                    development type on Australian property parcels.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Package 2 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm work-package-card" data-bs-toggle="modal"
+                            data-bs-target="#wp2Modal">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">WP2: Built and natural environment change</h5>
+                                <p class="card-text">Combining city-scale maps of (re)development with high-resolution
+                                    surface cover data to map change in built and natural cover.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Package 3 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm work-package-card" data-bs-toggle="modal"
+                            data-bs-target="#wp3Modal">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">WP3: Heat modelling</h5>
+                                <p class="card-text">Using microclimate models and thermal imaging to assess how
+                                    (re)development has warmed Australian residential areas.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Package 4 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card h-100 shadow-sm work-package-card" data-bs-toggle="modal"
+                            data-bs-target="#wp4Modal">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">WP4: Planning and policy analysis</h5>
+                                <p class="card-text">Assessing how existing planning and policy processes control
+                                    (re)development that exacerbates heat exposure.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <figure class="d-none d-md-block">
+                        <img src="https://github.com/hot-cities/website-assets/blob/main/brisbane.jpg?raw=true"
+                            class="img-fluid d-block mx-auto" style="max-height: 60vh;">
+                        <figcaption class="text-center">City scale deployment of the deep learning development
+                            classifier to map every property parcel in Brisbane in summer 2023.</figcaption>
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <!-- News & Updates Section -->
+        <section id="news" class="section-padding bg-light">
+            <div class="container">
+                <h2 class="text-center section-title">News & Updates</h2>
+                <div class="row">
+                    <div class="col-lg-8 mx-auto">
+                        <div class="news-scroll-container">
+                            <div class="news-item">
+                                <p class="news-date">August, 2025</p>
+                                <h5>GIScience, Canterbury, New Zealand</h5>
+                                <p>Presentation: <em>A deep learning urban development type classification system: an
+                                        application to millions of Australian property parcels.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">May, 2025</p>
+                                <h5>Planning Institute of Australia, Planning Congress</h5>
+                                <p>Presentation: <em>Exposing the true nature of residential development: An automated
+                                        property parcel classification approach using multi-modal deep learning.</em>
+                                </p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">April, 2025</p>
+                                <h5>Western Australian Local Government Association, Urban Forest Working Group</h5>
+                                <p>Presentation: <em>ARC Discovery Project – Impact of development typologies on urban
+                                        heat and canopy.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">October, 2024</p>
+                                <h5>New South Wales Department of Planning, Housing and Infrastructure, Green and
+                                    Sustainable Cities Branch </h5>
+                                <p>Presentation: <em>Why is (Re)development hot? Measuring Cumulative Heat in Australian
+                                        Cities.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">October, 2024</p>
+                                <h5>Western Australian Local Government Association</h5>
+                                <p>Presentation: <em>Why is (Re)development hot? Measuring Cumulative Heat in Australian
+                                        Cities.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">October, 2024</p>
+                                <h5>Victorian Government, Department of Transport and Planning</h5>
+                                <p>Presentation: <em>Why is (Re)development hot? Measuring Cumulative Heat in Australian
+                                        Cities.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">October, 2024</p>
+                                <h5>ISPRS Technical Commission IV Symposium, Fremantle</h5>
+                                <p>Presentation: <em>Residential redevelopment through the lens of AI. Automating
+                                        property parcel classification using multi-modal deep learning.</em></p>
+                            </div>
+                            <div class="news-item">
+                                <p class="news-date">May, 2024</p>
+                                <h5>Hydropolis 2024: Creating a green-blue Perth and Peel</h5>
+                                <p>Presentation: <em>City scale monitoring of vegetation and heat.</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Team Section -->
+        <section id="team" class="section-padding">
+            <div class="container">
+                <h2 class="text-center section-title">Team</h2>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/bryan.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a
+                                        href="https://research-repository.uwa.edu.au/en/persons/bryan-boruff"
+                                        target="_blank">Bryan Boruff</a></h5>
+                                <p class="card-text text-muted">UWA</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/joe.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="https://www.rmit.edu.au/profiles/h/joe-hurley"
+                                        target="_blank">Joe Hurley</a></h5>
+                                <p class="card-text text-muted">RMIT</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/sally.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a
+                                        href="https://research-repository.uwa.edu.au/en/persons/sally-thompson"
+                                        target="_blank">Sally Thompson</a></h5>
+                                <p class="card-text text-muted">UWA</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/chayn.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="https://www.rmit.edu.au/profiles/s/chayn-sun"
+                                        target="_blank">Qian (Chayn) Sun</a></h5>
+                                <p class="card-text text-muted">RMIT</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4"></div>
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/warin.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a
+                                        href="https://research-repository.uwa.edu.au/en/persons/warin-chotirosniramit"
+                                        target="_blank">Warin Chotirosniramit</a></h5>
+                                <p class="card-text text-muted">UWA</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/marco.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="https://www.rmit.edu.au/profiles/a/marco-amati"
+                                        target="_blank">Marco Amati</a></h5>
+                                <p class="card-text text-muted">RMIT</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/john.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a
+                                        href="https://research-repository.uwa.edu.au/en/persons/john-duncan"
+                                        target="_blank">John Duncan</a></h5>
+                                <p class="card-text text-muted">UWA</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card team-member-card text-center h-100">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/hugh.jpg?raw=true"
+                                class="card-img-top" alt="Team Member">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="https://www.rmit.edu.au/profiles/s/hugh-stanford"
+                                        target="_blank">Hugh Stanford</a></h5>
+                                <p class="card-text text-muted">RMIT</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white pt-5 pb-4">
+        <div class="container text-center text-md-start">
+            <div class="row text-center text-md-start">
+                <div class="col-md-3 col-lg-3 col-xl-3 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold text-primary">Hot Cities Project</h5>
+                    <p>The Hot Cities project is supported by an ARC Discovery grant and is based at The Univerity of
+                        Western
+                        Australia's Centre for Water and Spatial Science and RMIT.</p>
+                </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mt-3"></div>
+                <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mt-3">
+                    <h5 class="text-uppercase mb-4 fw-bold">Quick Links</h5>
+                    <p><a href="#overview" class="text-white" style="text-decoration: none;">Overview</a></p>
+                    <p><a href="#work-packages" class="text-white" style="text-decoration: none;">Work Packages</a></p>
+                    <p><a href="#news" class="text-white" style="text-decoration: none;">News</a></p>
+                    <p><a href="#team" class="text-white" style="text-decoration: none;">Team</a></p>
+                </div>
+            </div>
+
+            <hr class="my-4">
+        </div>
+    </footer>
+
+    <!-- Modals for Work Packages -->
+    <!-- WP1 Modal -->
+    <div class="modal fade" id="wp1Modal" tabindex="-1" aria-labelledby="wp1ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wp1ModalLabel">WP1: Mapping (re)development</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>We have developed a multi-modal deep learning based on a SWIN v2 Transformer architecture that
+                        converts a database of surface cover, built form, and dwelling metrics into property parcel
+                        level development type labels. The model is customised to jointly learn from geospatial data and
+                        tabular attributes that describe a parcel and the arrangement and composition of its built and
+                        natural elements. The model is trained on a custom dataset of over 50,000 manually labelled
+                        parcels and tested on over 10,000 independent parcels in each of Perth, Melbourne, Adelaide,
+                        Sydney, and Brisbane with accuracies exceeding 90%.</p>
+
+                    <p>Using Nearmap AI vector data as inputs, the model has been deployed to map the development type
+                        on every property parcel in Perth, Melbourne, Adelaide, Sydney, and Brisbane for multiple time
+                        points. Using these maps we can resolve the frequency and spatial pattern of different types of
+                        (re)development within cities capturing greenfield expansion, knockdown rebuilds, soft
+                        densification and infill, high density and apartment developments.</p>
+                    <div class="mt-4">
+                        <figure class="d-none d-md-block">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/fremantle-infill.jpg?raw=true"
+                                class="img-fluid d-block mx-auto" style="max-height: 60vh;">
+                            <figcaption class="text-center">Deep learning development type classifier detecting single
+                                unit parcels changing to house multiple units in Fremanlte, Western Australia. This
+                                illustrates the model's capacity to detect and map low density infill (basemap imagery
+                                from Nearmap).</figcaption>
+                        </figure>
+                    </div>
+                    <div class="mt-4">
+                        <figure class="d-none d-md-block">
+                            <img src="https://github.com/hot-cities/website-assets/blob/main/subdivides-change-perth.jpg?raw=true"
+                                class="img-fluid d-block mx-auto" style="max-height: 70vh;">
+                            <figcaption class="text-center">Deep learning development type classifier detecting all
+                                cases of multiple units on a lot for two time points in Perth, Western Australia, and
+                                counts of multiple unit parcels by SA1s for two dates. This captures the spatial pattern
+                                of soft and low density infill in Perth.</figcaption>
+                        </figure>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WP2 Modal -->
+    <div class="modal fade" id="wp2Modal" tabindex="-1" aria-labelledby="wp2ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wp2ModalLabel">WP2: Built and natural environment change</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>At property parcel and Mesh Block levels we are mapping distribution of various built and natural
+                        environment metrics including tree, building footprint, and impervious surface cover and
+                        building heights. This data is derived from Nearmap AI’s vector product and is used to
+                        characterise how cities and their constituent environments are changing. We are linking this
+                        data with development types to attribute change in built and natural cover to different types of
+                        (re)development. We are also using this data inputs to temperature modelling analyses to
+                        causally link (re)development to warming through changes in built and natural environments.</p>
+                </div>
+                <div class="mt-4">
+                    <figure class="d-none d-md-block">
+                        <img src="https://github.com/hot-cities/website-assets/blob/main/building-single-house.jpg?raw=true"
+                            class="img-fluid d-block mx-auto" style="max-height: 70vh;">
+                        <figcaption class="text-center">The proportion of property parcels covered by buildings for all
+                            single unit parcels detected across Perth (basemap imagery from Nearmap).</figcaption>
+                    </figure>
+                </div>
+                <div class="mt-4">
+                    <figure class="d-none d-md-block">
+                        <img src="https://github.com/hot-cities/website-assets/blob/main/perth-impervious-surface.jpg?raw=true"
+                            class="img-fluid d-block mx-auto" style="max-height: 70vh;">
+                        <figcaption class="text-center">The increase in impervious surface cover across Perth between
+                            2010 and 2023 mapped across Perth at the Mesh Block level using Nearmap AI vector data.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WP3 Modal -->
+    <div class="modal fade" id="wp3Modal" tabindex="-1" aria-labelledby="wp3ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wp3ModalLabel">WP3: Heat modelling</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>We are using a combination of thermal imaging from satellites and microclimate modelling to
+                        assess how different types of (re)development are warming Australia’s cities. We’re combining
+                        thermal satellite data with maps of development type and surface cover in a quasi-experimental
+                        design to statistically model the causal effect of actual cases of (re)development of warming.
+                        We’re using microclimate models to simulate at high resolutions how land cover and built form
+                        change associated with cases of (re)development amplifies or attenuates local temperatures and
+                        human comfort metrics given the same background weather conditions.</p>
+                </div>
+                <div class="mt-4">
+                    <figure class="d-none d-md-block">
+                        <img src="https://github.com/hot-cities/website-assets/blob/main/heat-diff-in-diff.jpg?raw=true"
+                            class="img-fluid d-block mx-auto" style="max-height: 70vh;">
+                        <figcaption class="text-center">Illustration of the quasi-experimental approach to estimating
+                            the warming effect of parcel-level redevelopment.</figcaption>
+                    </figure>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- WP4 Modal -->
+    <div class="modal fade" id="wp4Modal" tabindex="-1" aria-labelledby="wp4ModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="wp4ModalLabel">WP4: Planning and policy analysis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>We're conducting a detailed analysis of various planning policies and regulations to assess the
+                        extent to which they're able to control or restrict types of (re)development that cause harmful
+                        warming or incentivise positive cooling development.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script>
+        // Change navbar style on scroll
+        const navbar = document.getElementById('mainNavbar');
+        window.onscroll = () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('navbar-scrolled');
+            } else {
+                navbar.classList.remove('navbar-scrolled');
+            }
+        };
+    </script>
+</body>
+
+</html>
